@@ -1,11 +1,11 @@
 import { createContext, useReducer } from "react";
 
 const initialState = {
-  projects: null,
+  projects: [],
 };
 export const projectReducer = (state, action) => {
   switch (action.type) {
-    case "GET_PROJECTS":
+    case "SET_PROJECTS": // as it is set to frontend by getting from mongoDB
       return {
         ...state,
         projects: action.payload,
