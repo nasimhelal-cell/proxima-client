@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import ProjectDetails from "../components/ProjectDetails";
+import ProjectForm from "../components/ProjectForm";
+import SectionTitle from "../components/SectionTitle";
 const Home = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -13,7 +15,7 @@ const Home = () => {
         if (!res.ok) throw new Error("Something went wrong!");
         const data = await res.json();
         setProjects(data);
-        console.log(data);
+
         setLoading(false);
       } catch (err) {
         setError(err.message);
@@ -24,10 +26,10 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="home container mx-auto py-20 flex gap-10">
+    <div className="home container mx-auto py-20 grid grid-cols-3 gap-10">
       <div className="left col-span-2">
         <h2 className="text-4xl font-medium text-sky-400 mb-10">
-          all projects
+          All projects
         </h2>
         <div className="projects-wrapper flex flex-wrap gap-5">
           {projects &&
@@ -36,7 +38,7 @@ const Home = () => {
             })}
         </div>
       </div>
-      <div className="right"></div>
+      <ProjectForm />
     </div>
   );
 };
