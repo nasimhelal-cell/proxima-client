@@ -1,8 +1,14 @@
+import { useState } from "react";
 import { useProjectContext } from "../hooks/useProjectContext";
 import { currencyFormatter } from "../utilities/currencyFormatter";
 import moment from "moment";
+import ProjectForm from "./ProjectForm";
 const ProjectDetails = ({ project }) => {
+  const [isModalopen, setIsModalopen] = useState(false);
+  const [isOverlayopen, setIsOverlayopen] = useState(false);
+
   const { dispatch } = useProjectContext();
+
   const handleDelete = async () => {
     const res = await fetch(
       `http://localhost:5000/api/projects/${project._id}`,
@@ -15,6 +21,12 @@ const ProjectDetails = ({ project }) => {
       dispatch({ type: "DELETE_PROJECT", payload: json });
     }
   };
+
+  const handleUpdate = () => {
+    setIsModalopen(true);
+    setIsOverlayopen(true);
+  };
+
   return (
     <div className="project bg-slate-800 p-5 rounded-xl shadow-xl border border-slate-700 flex flex-col gap-5 w-[25rem]">
       <div className="top">
@@ -52,7 +64,10 @@ const ProjectDetails = ({ project }) => {
         </div>
       </div>
       <div className="bottom flex gap-5">
-        <button className="bg-sky-400 text-slate-900 py-2 px-5 rounded shadow-xl hover:bg-sky-50 duration-300">
+        <button
+          onClick={handleUpdate}
+          className="bg-sky-400 text-slate-900 py-2 px-5 rounded shadow-xl hover:bg-sky-50 duration-300"
+        >
           update
         </button>
         <button
@@ -61,6 +76,32 @@ const ProjectDetails = ({ project }) => {
         >
           delete
         </button>
+      </div>
+
+      {/* overlay  */}
+      <div
+        onClick={() => {
+          setIsOverlayopen(false);
+          setIsModalopen(false);
+        }}
+        className={`overlay fixed z-[1] h-screen w-screen bg-slate-900/50 backdrop-blur-sm inset-0 ${
+          isOverlayopen ? "" : "hidden"
+        }`}
+      ></div>
+      {/* modals  */}
+      <div
+        className={`update-modal w-[35rem] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-slate-800 p-10 rounded-xl shadow-xl border border-slate-700 z-[2] ${
+          isModalopen ? "" : "hidden"
+        }`}
+      >
+        <h2 className="text-4xl font-medium text-sky-400 mb-10">
+          update project
+        </h2>
+        <ProjectForm
+          project={project}
+          setIsModalopen={setIsModalopen}
+          setIsOverlayopen={setIsOverlayopen}
+        />
       </div>
     </div>
   );
