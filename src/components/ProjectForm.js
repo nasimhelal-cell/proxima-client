@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useProjectContext } from "../hooks/useProjectContext";
+import { useAuthContext } from "../hooks/useAuthContext";
 const ProjectForm = ({ project, setIsModalopen, setIsOverlayopen }) => {
   const [title, setTitle] = useState(project ? project.title : "");
   const [tech, setTech] = useState(project ? project.tech : "");
@@ -11,9 +12,14 @@ const ProjectForm = ({ project, setIsModalopen, setIsOverlayopen }) => {
   const [emptyFields, setEmptyFields] = useState([]);
 
   const { dispatch } = useProjectContext();
+  const { user } = useAuthContext();
   //handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!user) {
+      setError("You must be logged in !");
+    }
 
     //data making
     const projectObj = { title, tech, budget, duration, manager, dev };
@@ -24,6 +30,7 @@ const ProjectForm = ({ project, setIsModalopen, setIsOverlayopen }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
         },
         body: JSON.stringify(projectObj),
       });
@@ -57,6 +64,7 @@ const ProjectForm = ({ project, setIsModalopen, setIsOverlayopen }) => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
           },
           body: JSON.stringify(projectObj),
         }
@@ -106,7 +114,7 @@ const ProjectForm = ({ project, setIsModalopen, setIsOverlayopen }) => {
           placeholder="e.g. my project"
           id="title"
           className={`bg-transparent border  py-3 px-5 rounded-lg outline-none focus:border-sky-400 duration-300 ${
-            emptyFields.includes("title")
+            emptyFields?.includes("title")
               ? "border-rose-500"
               : "border-slate-500"
           }`}
@@ -126,7 +134,7 @@ const ProjectForm = ({ project, setIsModalopen, setIsOverlayopen }) => {
           placeholder="e.g. react, redux, node.js"
           id="tech"
           className={`bg-transparent border  py-3 px-5 rounded-lg outline-none focus:border-sky-400 duration-300 ${
-            emptyFields.includes("tech")
+            emptyFields?.includes("tech")
               ? "border-rose-500"
               : "border-slate-500"
           }`}
@@ -146,7 +154,7 @@ const ProjectForm = ({ project, setIsModalopen, setIsOverlayopen }) => {
           placeholder="e.g. 500 $"
           id="budget"
           className={`bg-transparent border  py-3 px-5 rounded-lg outline-none focus:border-sky-400 duration-300 ${
-            emptyFields.includes("budget")
+            emptyFields?.includes("budget")
               ? "border-rose-500"
               : "border-slate-500"
           }`}
@@ -166,7 +174,7 @@ const ProjectForm = ({ project, setIsModalopen, setIsOverlayopen }) => {
           placeholder="e.g. e-commerce website"
           id="duration"
           className={`bg-transparent border  py-3 px-5 rounded-lg outline-none focus:border-sky-400 duration-300 ${
-            emptyFields.includes("duration")
+            emptyFields?.includes("duration")
               ? "border-rose-500"
               : "border-slate-500"
           }`}
@@ -186,7 +194,7 @@ const ProjectForm = ({ project, setIsModalopen, setIsOverlayopen }) => {
           placeholder="e.g. Natasha"
           id="manager"
           className={`bg-transparent border  py-3 px-5 rounded-lg outline-none focus:border-sky-400 duration-300 ${
-            emptyFields.includes("manager")
+            emptyFields?.includes("manager")
               ? "border-rose-500"
               : "border-slate-500"
           }`}
@@ -206,7 +214,9 @@ const ProjectForm = ({ project, setIsModalopen, setIsOverlayopen }) => {
           placeholder="e.g. 5 "
           id="dev"
           className={`bg-transparent border  py-3 px-5 rounded-lg outline-none focus:border-sky-400 duration-300 ${
-            emptyFields.includes("dev") ? "border-rose-500" : "border-slate-500"
+            emptyFields?.includes("dev")
+              ? "border-rose-500"
+              : "border-slate-500"
           }`}
         />
       </div>
