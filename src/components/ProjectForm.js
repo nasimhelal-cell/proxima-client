@@ -226,9 +226,9 @@ const ProjectForm = ({ project, setIsModalopen, setIsOverlayopen }) => {
 
       <button
         type="submit"
-        className="bg-sky-400 text-slate-900 py-3 rounded-lg hover:bg-sky-50 duration-300"
+        className="bg-sky-400 text-slate-900 py-3 rounded-lg hover:bg-sky-50 duration-300 mt-3"
       >
-        {project ? "Confirm Update" : "add project"}
+        {project ? "Confirm Update" : "Add Project"}
       </button>
       {error && (
         <p className="bg-rose-500/20 rounded-lg p-5 text-rose-500 border border-rose-500">
